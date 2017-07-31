@@ -84,4 +84,30 @@ describe('option', function() {
       assert.equal(option.mapOrElse(() => 42, x => x.length), 42);
     });
   });
+
+  describe('and', function() {
+    it('returns none for some and none', function() {
+      const x = new Some(2);
+      const y: Option<string> = new None();
+      assert(x.and(y).isNone());
+    });
+
+    it('returns none for none and some', function() {
+      const x: Option<number> = new None();
+      const y: Option<string> = new Some('foo');
+      assert(x.and(y).isNone());
+    });
+
+    it('returns some for some and some', function() {
+      const x: Option<number> = new Some(2);
+      const y: Option<string> = new Some('foo');
+      assert.equal(x.and(y).unwrap(), 'foo');
+    });
+
+    it('returns none for none and none', function() {
+      const x: Option<number> = new None();
+      const y: Option<string> = new None();
+      assert(x.and(y).isNone());
+    });
+  });
 });

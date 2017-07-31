@@ -40,6 +40,10 @@ export class Some<T> {
   mapOrElse<U>(_def: () => U, f: T => U): U {
     return f(this.value);
   }
+
+  and<U>(optb: Option<U>): Option<U> {
+    return optb;
+  }
 }
 
 export class None<T> {
@@ -73,5 +77,9 @@ export class None<T> {
 
   mapOrElse<U>(def: () => U, _f: T => U): U {
     return def();
+  }
+
+  and<U>(_optb: Option<U>): Option<U> {
+    return new None();
   }
 }
