@@ -34,4 +34,16 @@ describe('option', function() {
       assert.equal(option.unwrapOr(12), 12);
     });
   });
+
+  describe('unwrapOrElse', function() {
+    it('returns the value for some', function() {
+      const option = new Some(42);
+      assert.equal(option.unwrapOrElse(() => 12), 42);
+    });
+
+    it('invokes the default function for none', function() {
+      const option = new None();
+      assert.equal(option.unwrapOrElse(() => 12), 12);
+    });
+  });
 });

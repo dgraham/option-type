@@ -24,6 +24,10 @@ export class Some<T> {
   unwrapOr(_def: T): T {
     return this.value;
   }
+
+  unwrapOrElse(_f: () => T): T {
+    return this.value;
+  }
 }
 
 export class None<T> {
@@ -41,5 +45,9 @@ export class None<T> {
 
   unwrapOr(def: T): T {
     return def;
+  }
+
+  unwrapOrElse(f: () => T): T {
+    return f();
   }
 }
