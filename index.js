@@ -32,6 +32,10 @@ export class Some<T> {
   map<U>(f: T => U): Option<U> {
     return new Some(f(this.value));
   }
+
+  mapOr<U>(_def: U, f: T => U): U {
+    return f(this.value);
+  }
 }
 
 export class None<T> {
@@ -57,5 +61,9 @@ export class None<T> {
 
   map<U>(_f: T => U): Option<U> {
     return new None();
+  }
+
+  mapOr<U>(def: U, _f: T => U): U {
+    return def;
   }
 }

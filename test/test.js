@@ -60,4 +60,16 @@ describe('option', function() {
       assert(actual.isNone());
     });
   });
+
+  describe('mapOr', function() {
+    it('returns the mapped value for some', function() {
+      const option = new Some('foo');
+      assert.equal(option.mapOr(42, x => x.length), 3);
+    });
+
+    it('returns the default value for none', function() {
+      const option = new None();
+      assert.equal(option.mapOr(42, x => x.length), 42);
+    });
+  });
 });
