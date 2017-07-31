@@ -7,6 +7,7 @@
   "scripts": {
     "flow": "flow check",
     "lint": "eslint *.js test/",
+    "pretest": "npm run flow && npm run lint",
     "test": "mocha --require babel-register"
   },
   "keywords": [

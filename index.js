@@ -20,6 +20,10 @@ export class Some<T> {
   unwrap(): T {
     return this.value;
   }
+
+  unwrapOr(_def: T): T {
+    return this.value;
+  }
 }
 
 export class None<T> {
@@ -33,5 +37,9 @@ export class None<T> {
 
   unwrap(): T {
     throw new Error('called `Option::unwrap()` on a `None` value');
+  }
+
+  unwrapOr(def: T): T {
+    return def;
   }
 }

@@ -22,4 +22,16 @@ describe('option', function() {
   it('throws unwrapping none', function() {
     assert.throws(() => new None().unwrap());
   });
+
+  describe('unwrapOr', function() {
+    it('returns the value for some', function() {
+      const option = new Some(42);
+      assert.equal(option.unwrapOr(12), 42);
+    });
+
+    it('returns the default for none', function() {
+      const option = new None();
+      assert.equal(option.unwrapOr(12), 12);
+    });
+  });
 });
