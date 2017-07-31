@@ -72,4 +72,16 @@ describe('option', function() {
       assert.equal(option.mapOr(42, x => x.length), 42);
     });
   });
+
+  describe('mapOrElse', function() {
+    it('returns the mapped value for some', function() {
+      const option = new Some('foo');
+      assert.equal(option.mapOrElse(() => 42, x => x.length), 3);
+    });
+
+    it('returns the default value for none', function() {
+      const option = new None();
+      assert.equal(option.mapOrElse(() => 42, x => x.length), 42);
+    });
+  });
 });
