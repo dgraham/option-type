@@ -28,6 +28,10 @@ export class Some<T> {
   unwrapOrElse(_f: () => T): T {
     return this.value;
   }
+
+  map<U>(f: T => U): Option<U> {
+    return new Some(f(this.value));
+  }
 }
 
 export class None<T> {
@@ -49,5 +53,9 @@ export class None<T> {
 
   unwrapOrElse(f: () => T): T {
     return f();
+  }
+
+  map<U>(_f: T => U): Option<U> {
+    return new None();
   }
 }

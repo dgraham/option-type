@@ -46,4 +46,18 @@ describe('option', function() {
       assert.equal(option.unwrapOrElse(() => 12), 12);
     });
   });
+
+  describe('map', function() {
+    it('returns the mapped value for some', function() {
+      const option = new Some(42);
+      const actual = option.map(x => `x is ${x}`);
+      assert.equal(actual.unwrap(), 'x is 42');
+    });
+
+    it('returns none for none', function() {
+      const option = new None();
+      const actual = option.map(x => `x is ${x}`);
+      assert(actual.isNone());
+    });
+  });
 });
