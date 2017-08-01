@@ -2,8 +2,7 @@
 
 import assert from 'assert';
 import {describe, it} from 'mocha';
-import {None, Some} from '../index';
-import type {Option} from '../index';
+import {type Option, None, Some} from '../index';
 
 describe('option', function() {
   it('can be some or none', function() {
@@ -108,6 +107,26 @@ describe('option', function() {
       const x: Option<number> = new None();
       const y: Option<string> = new None();
       assert(x.and(y).isNone());
+    });
+  });
+
+  describe('match', function() {
+    it('matches some', function() {
+      const x = new Some(2);
+      const value = x.match({
+        Some: v => v * 2,
+        None: () => 42
+      });
+      assert.equal(value, 4);
+    });
+
+    it('matches none', function() {
+      const x = new None();
+      const value = x.match({
+        Some: v => v * 2,
+        None: () => 42
+      });
+      assert.equal(value, 42);
     });
   });
 });

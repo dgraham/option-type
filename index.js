@@ -44,6 +44,10 @@ export class Some<T> {
   and<U>(optb: Option<U>): Option<U> {
     return optb;
   }
+
+  match<U>(m: {|Some: T => U, None: () => U|}): U {
+    return m.Some(this.value);
+  }
 }
 
 export class None<T> {
@@ -81,5 +85,9 @@ export class None<T> {
 
   and<U>(_optb: Option<U>): Option<U> {
     return new None();
+  }
+
+  match<U>(m: {|Some: T => U, None: () => U|}): U {
+    return m.None();
   }
 }
