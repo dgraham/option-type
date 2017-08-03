@@ -17,6 +17,10 @@ export class Some<T> {
     return false;
   }
 
+  expect(_msg: string): T {
+    return this.value;
+  }
+
   unwrap(): T {
     return this.value;
   }
@@ -69,6 +73,10 @@ export class None<T> {
 
   isNone(): boolean {
     return true;
+  }
+
+  expect(msg: string): T {
+    throw new Error(msg);
   }
 
   unwrap(): T {

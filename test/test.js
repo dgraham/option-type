@@ -13,6 +13,17 @@ describe('option', function() {
     assert(option.isNone());
   });
 
+  describe('expect', function() {
+    it('unwraps some value', function() {
+      const value = new Some(42);
+      assert.equal(value.expect('boom'), 42);
+    });
+
+    it('throws unwrapping none', function() {
+      assert.throws(() => new None().expect('boom'));
+    });
+  });
+
   describe('unwrap', function() {
     it('unwraps some value', function() {
       const value = new Some(42);
