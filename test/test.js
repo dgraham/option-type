@@ -122,6 +122,24 @@ describe('option', function() {
     });
   });
 
+  describe('or', function() {
+    it('returns the some over none', function() {
+      assert.equal(new Some(2).or(new None()).unwrap(), 2);
+    });
+
+    it('returns the alternative to none', function() {
+      assert.equal(new None().or(new Some(2)).unwrap(), 2);
+    });
+
+    it('returns the first of two somes', function() {
+      assert.equal(new Some(2).or(new Some(100)).unwrap(), 2);
+    });
+
+    it('returns none for two nones', function() {
+      assert(new None().or(new None()).isNone());
+    });
+  });
+
   describe('match', function() {
     it('matches some', function() {
       const x = new Some(2);
