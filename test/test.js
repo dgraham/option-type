@@ -110,6 +110,18 @@ describe('option', function() {
     });
   });
 
+  describe('andThen', function() {
+    it('flat maps some and none', function() {
+      const sq = (x: number): Option<number> => new Some(x * x);
+      const nope = (_: number): Option<number> => new None();
+
+      assert.equal(new Some(2).andThen(sq).andThen(sq).unwrap(), 16);
+      assert(new Some(2).andThen(sq).andThen(nope).isNone());
+      assert(new Some(2).andThen(nope).andThen(sq).isNone());
+      assert(new None().andThen(sq).andThen(sq).isNone());
+    });
+  });
+
   describe('match', function() {
     it('matches some', function() {
       const x = new Some(2);
