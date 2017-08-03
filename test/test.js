@@ -66,6 +66,11 @@ describe('option', function() {
       assert.equal(actual.unwrap(), 'x is 42');
     });
 
+    it('maps some to none for null result', function() {
+      const option = new Some(42);
+      assert(option.map(_ => null).isNone());
+    });
+
     it('returns none for none', function() {
       const option = new None();
       const actual = option.map(x => `x is ${x}`);

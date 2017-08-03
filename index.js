@@ -1,8 +1,10 @@
 // @flow
 
-export type Option<T> = Some<T> | None<T>;
+type Value = boolean | number | string | Object;
 
-export class Some<T> {
+export type Option<T: Value> = Some<T> | None<T>;
+
+export class Some<T: Value> {
   value: T;
 
   constructor(value: T) {
@@ -33,23 +35,24 @@ export class Some<T> {
     return this.value;
   }
 
-  map<U>(f: T => U): Option<U> {
-    return new Some(f(this.value));
+  map<U: Value>(f: T => U): Option<U> {
+    const result = f(this.value);
+    return result == null ? new None() : new Some(result);
   }
 
-  mapOr<U>(_def: U, f: T => U): U {
+  mapOr<U: Value>(_def: U, f: T => U): U {
     return f(this.value);
   }
 
-  mapOrElse<U>(_def: () => U, f: T => U): U {
+  mapOrElse<U: Value>(_def: () => U, f: T => U): U {
     return f(this.value);
   }
 
-  and<U>(optb: Option<U>): Option<U> {
+  and<U: Value>(optb: Option<U>): Option<U> {
     return optb;
   }
 
-  andThen<U>(f: T => Option<U>): Option<U> {
+  andThen<U: Value>(f: T => Option<U>): Option<U> {
     return f(this.value);
   }
 
@@ -61,12 +64,12 @@ export class Some<T> {
     return this;
   }
 
-  match<U>(m: {|Some: T => U, None: () => U|}): U {
+  match<U: Value>(m: {|Some: T => U, None: () => U|}): U {
     return m.Some(this.value);
   }
 }
 
-export class None<T> {
+export class None<T: Value> {
   isSome(): boolean {
     return false;
   }
@@ -91,23 +94,23 @@ export class None<T> {
     return f();
   }
 
-  map<U>(_f: T => U): Option<U> {
+  map<U: Value>(_f: T => U): Option<U> {
     return new None();
   }
 
-  mapOr<U>(def: U, _f: T => U): U {
+  mapOr<U: Value>(def: U, _f: T => U): U {
     return def;
   }
 
-  mapOrElse<U>(def: () => U, _f: T => U): U {
+  mapOrElse<U: Value>(def: () => U, _f: T => U): U {
     return def();
   }
 
-  and<U>(_optb: Option<U>): Option<U> {
+  and<U: Value>(_optb: Option<U>): Option<U> {
     return new None();
   }
 
-  andThen<U>(_f: T => Option<U>): Option<U> {
+  andThen<U: Value>(_f: T => Option<U>): Option<U> {
     return new None();
   }
 
@@ -119,7 +122,7 @@ export class None<T> {
     return f();
   }
 
-  match<U>(m: {|Some: T => U, None: () => U|}): U {
+  match<U: Value>(m: {|Some: T => U, None: () => U|}): U {
     return m.None();
   }
 }
