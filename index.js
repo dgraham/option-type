@@ -53,6 +53,10 @@ export class Some<T> {
     return this;
   }
 
+  orElse(_f: () => Option<T>): Option<T> {
+    return this;
+  }
+
   match<U>(m: {|Some: T => U, None: () => U|}): U {
     return m.Some(this.value);
   }
@@ -101,6 +105,10 @@ export class None<T> {
 
   or(optb: Option<T>): Option<T> {
     return optb;
+  }
+
+  orElse(f: () => Option<T>): Option<T> {
+    return f();
   }
 
   match<U>(m: {|Some: T => U, None: () => U|}): U {

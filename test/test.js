@@ -140,6 +140,23 @@ describe('option', function() {
     });
   });
 
+  describe('orElse', function() {
+    const def = () => new Some(42);
+    const nope = () => new None();
+
+    it('returns the some', function() {
+      assert.equal(new Some(2).orElse(def).unwrap(), 2);
+    });
+
+    it('returns the default some value', function() {
+      assert.equal(new None().orElse(def).unwrap(), 42);
+    });
+
+    it('returns the default none value', function() {
+      assert(new None().orElse(nope).isNone());
+    });
+  });
+
   describe('match', function() {
     it('matches some', function() {
       const x = new Some(2);
