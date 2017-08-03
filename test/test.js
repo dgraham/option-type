@@ -193,5 +193,17 @@ describe('option', function() {
       });
       assert.equal(value, 42);
     });
+
+    it('allows no return value in matchers', function() {
+      const x = new Some(2);
+      x.match({
+        Some(value) {
+          assert.equal(value, 2);
+        },
+        None() {
+          assert.ok(false, 'should not match none');
+        }
+      });
+    });
   });
 });

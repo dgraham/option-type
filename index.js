@@ -64,7 +64,7 @@ export class Some<T: Value> {
     return this;
   }
 
-  match<U: Value>(m: {|Some: T => U, None: () => U|}): U {
+  match<U>(m: {|Some: T => U, None: () => U|}): U {
     return m.Some(this.value);
   }
 }
@@ -122,7 +122,7 @@ export class None<T: Value> {
     return f();
   }
 
-  match<U: Value>(m: {|Some: T => U, None: () => U|}): U {
+  match<U>(m: {|Some: T => U, None: () => U|}): U {
     return m.None();
   }
 }
