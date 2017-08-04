@@ -26,8 +26,8 @@
     "babel-register": "^6.24.1",
     "eslint": "^4.3.0",
     "eslint-plugin-prettier": "^2.1.2",
-    "flow-bin": "^0.51.1",
-    "mocha": "^3.4.2",
+    "flow-bin": "^0.52.0",
+    "mocha": "^3.5.0",
     "prettier": "^1.5.3"
   },
   "files": [
