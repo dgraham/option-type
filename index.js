@@ -132,3 +132,7 @@ export const None = Object.freeze(new Nothing());
 export function Some<T: Value>(value: T): Option<T> {
   return Object.freeze(new Something(value));
 }
+
+export function option<T: Value>(value: ?T): Option<T> {
+  return value == null ? None : Some(value);
+}

@@ -2,9 +2,23 @@
 
 import assert from 'assert';
 import {describe, it} from 'mocha';
-import {type Option, None, Some} from '../index';
+import {type Option, option, None, Some} from '../index';
 
 describe('option', function() {
+  describe('option factory', function() {
+    it('returns none for null', function() {
+      assert(option(null).isNone());
+    });
+
+    it('returns none for undefined', function() {
+      assert(option(undefined).isNone());
+    });
+
+    it('returns some for number', function() {
+      assert(option(12).isSome());
+    });
+  });
+
   it('can be some or none', function() {
     let option: Option<number> = None;
     assert(option.isNone());
