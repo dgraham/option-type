@@ -9,7 +9,7 @@ describe('option', function() {
     let option: Option<number> = None;
     assert(option.isNone());
 
-    option = new Some(42);
+    option = Some(42);
     assert(option.isSome());
 
     const value: number = option.unwrap();
@@ -18,7 +18,7 @@ describe('option', function() {
 
   describe('expect', function() {
     it('unwraps some value', function() {
-      const option = new Some(42);
+      const option = Some(42);
       assert.equal(option.expect('boom'), 42);
     });
 
@@ -29,7 +29,7 @@ describe('option', function() {
 
   describe('unwrap', function() {
     it('unwraps some value', function() {
-      const option = new Some(42);
+      const option = Some(42);
       assert.equal(option.unwrap(), 42);
     });
 
@@ -40,7 +40,7 @@ describe('option', function() {
 
   describe('unwrapOr', function() {
     it('returns the value for some', function() {
-      const option = new Some(42);
+      const option = Some(42);
       assert.equal(option.unwrapOr(12), 42);
     });
 
@@ -52,7 +52,7 @@ describe('option', function() {
 
   describe('unwrapOrElse', function() {
     it('returns the value for some', function() {
-      const option = new Some(42);
+      const option = Some(42);
       assert.equal(option.unwrapOrElse(() => 12), 42);
     });
 
@@ -64,13 +64,13 @@ describe('option', function() {
 
   describe('map', function() {
     it('returns the mapped value for some', function() {
-      const option = new Some(42);
+      const option = Some(42);
       const actual = option.map(x => `x is ${x}`);
       assert.equal(actual.unwrap(), 'x is 42');
     });
 
     it('maps some to none for null result', function() {
-      const option = new Some(42);
+      const option = Some(42);
       assert(option.map(_ => null).isNone());
     });
 
@@ -83,7 +83,7 @@ describe('option', function() {
 
   describe('mapOr', function() {
     it('returns the mapped value for some', function() {
-      const option = new Some('foo');
+      const option = Some('foo');
       assert.equal(option.mapOr(42, x => x.length), 3);
     });
 
@@ -95,7 +95,7 @@ describe('option', function() {
 
   describe('mapOrElse', function() {
     it('returns the mapped value for some', function() {
-      const option = new Some('foo');
+      const option = Some('foo');
       assert.equal(option.mapOrElse(() => 42, x => x.length), 3);
     });
 
@@ -107,20 +107,20 @@ describe('option', function() {
 
   describe('and', function() {
     it('returns none for some and none', function() {
-      const x = new Some(2);
+      const x = Some(2);
       const y: Option<string> = None;
       assert(x.and(y).isNone());
     });
 
     it('returns none for none and some', function() {
       const x: Option<number> = None;
-      const y: Option<string> = new Some('foo');
+      const y: Option<string> = Some('foo');
       assert(x.and(y).isNone());
     });
 
     it('returns some for some and some', function() {
-      const x: Option<number> = new Some(2);
-      const y: Option<string> = new Some('foo');
+      const x: Option<number> = Some(2);
+      const y: Option<string> = Some('foo');
       assert.equal(x.and(y).unwrap(), 'foo');
     });
 
@@ -133,27 +133,27 @@ describe('option', function() {
 
   describe('andThen', function() {
     it('flat maps some and none', function() {
-      const sq = (x: number): Option<number> => new Some(x * x);
+      const sq = (x: number): Option<number> => Some(x * x);
       const nope = (_: number): Option<number> => None;
 
-      assert.equal(new Some(2).andThen(sq).andThen(sq).unwrap(), 16);
-      assert(new Some(2).andThen(sq).andThen(nope).isNone());
-      assert(new Some(2).andThen(nope).andThen(sq).isNone());
+      assert.equal(Some(2).andThen(sq).andThen(sq).unwrap(), 16);
+      assert(Some(2).andThen(sq).andThen(nope).isNone());
+      assert(Some(2).andThen(nope).andThen(sq).isNone());
       assert(None.andThen(sq).andThen(sq).isNone());
     });
   });
 
   describe('or', function() {
     it('returns the some over none', function() {
-      assert.equal(new Some(2).or(None).unwrap(), 2);
+      assert.equal(Some(2).or(None).unwrap(), 2);
     });
 
     it('returns the alternative to none', function() {
-      assert.equal(None.or(new Some(2)).unwrap(), 2);
+      assert.equal(None.or(Some(2)).unwrap(), 2);
     });
 
     it('returns the first of two somes', function() {
-      assert.equal(new Some(2).or(new Some(100)).unwrap(), 2);
+      assert.equal(Some(2).or(Some(100)).unwrap(), 2);
     });
 
     it('returns none for two nones', function() {
@@ -162,11 +162,11 @@ describe('option', function() {
   });
 
   describe('orElse', function() {
-    const def = () => new Some(42);
+    const def = () => Some(42);
     const nope = () => None;
 
     it('returns the some', function() {
-      assert.equal(new Some(2).orElse(def).unwrap(), 2);
+      assert.equal(Some(2).orElse(def).unwrap(), 2);
     });
 
     it('returns the default some value', function() {
@@ -180,7 +180,7 @@ describe('option', function() {
 
   describe('match', function() {
     it('matches some', function() {
-      const x = new Some(2);
+      const x = Some(2);
       const value = x.match({
         Some: v => v * 2,
         None: () => 42
@@ -198,7 +198,7 @@ describe('option', function() {
     });
 
     it('allows no return value in matchers', function() {
-      const x = new Some(2);
+      const x = Some(2);
       x.match({
         Some(value) {
           assert.equal(value, 2);

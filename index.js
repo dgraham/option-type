@@ -2,9 +2,9 @@
 
 type Value = boolean | number | string | Object;
 
-export type Option<T: Value> = Some<T> | Nothing;
+export type Option<T: Value> = Something<T> | Nothing;
 
-export class Some<T: Value> {
+class Something<T: Value> {
   value: T;
 
   constructor(value: T) {
@@ -35,9 +35,9 @@ export class Some<T: Value> {
     return this.value;
   }
 
-  map<U: Value>(f: T => U): Option<U> {
+  map<U: Value>(f: T => ?U): Option<U> {
     const result = f(this.value);
-    return result == null ? None : new Some(result);
+    return result == null ? None : Some(result);
   }
 
   mapOr<U: Value>(_def: U, f: T => U): U {
@@ -94,7 +94,7 @@ class Nothing {
     return f();
   }
 
-  map<T: Value, U: Value>(_f: T => U): Option<U> {
+  map<T: Value, U: Value>(_f: T => ?U): Option<U> {
     return this;
   }
 
@@ -128,3 +128,7 @@ class Nothing {
 }
 
 export const None = Object.freeze(new Nothing());
+
+export function Some<T: Value>(value: T): Option<T> {
+  return Object.freeze(new Something(value));
+}
