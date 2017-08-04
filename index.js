@@ -2,7 +2,7 @@
 
 type Value = boolean | number | string | Object;
 
-export type Option<T: Value> = Some<T> | None<T>;
+export type Option<T: Value> = Some<T> | Nothing;
 
 export class Some<T: Value> {
   value: T;
@@ -37,7 +37,7 @@ export class Some<T: Value> {
 
   map<U: Value>(f: T => U): Option<U> {
     const result = f(this.value);
-    return result == null ? new None() : new Some(result);
+    return result == null ? None : new Some(result);
   }
 
   mapOr<U: Value>(_def: U, f: T => U): U {
@@ -69,7 +69,7 @@ export class Some<T: Value> {
   }
 }
 
-export class None<T: Value> {
+class Nothing {
   isSome(): boolean {
     return false;
   }
@@ -78,51 +78,53 @@ export class None<T: Value> {
     return true;
   }
 
-  expect(msg: string): T {
+  expect<T: Value>(msg: string): T {
     throw new Error(msg);
   }
 
-  unwrap(): T {
+  unwrap<T: Value>(): T {
     throw new Error('called `Option::unwrap()` on a `None` value');
   }
 
-  unwrapOr(def: T): T {
+  unwrapOr<T: Value>(def: T): T {
     return def;
   }
 
-  unwrapOrElse(f: () => T): T {
+  unwrapOrElse<T: Value>(f: () => T): T {
     return f();
   }
 
-  map<U: Value>(_f: T => U): Option<U> {
-    return new None();
+  map<T: Value, U: Value>(_f: T => U): Option<U> {
+    return this;
   }
 
-  mapOr<U: Value>(def: U, _f: T => U): U {
+  mapOr<T: Value, U: Value>(def: U, _f: T => U): U {
     return def;
   }
 
-  mapOrElse<U: Value>(def: () => U, _f: T => U): U {
+  mapOrElse<T: Value, U: Value>(def: () => U, _f: T => U): U {
     return def();
   }
 
   and<U: Value>(_optb: Option<U>): Option<U> {
-    return new None();
+    return this;
   }
 
-  andThen<U: Value>(_f: T => Option<U>): Option<U> {
-    return new None();
+  andThen<T: Value, U: Value>(_f: T => Option<U>): Option<U> {
+    return this;
   }
 
-  or(optb: Option<T>): Option<T> {
+  or<T: Value>(optb: Option<T>): Option<T> {
     return optb;
   }
 
-  orElse(f: () => Option<T>): Option<T> {
+  orElse<T: Value>(f: () => Option<T>): Option<T> {
     return f();
   }
 
-  match<U>(m: {|Some: T => U, None: () => U|}): U {
+  match<T, U>(m: {|Some: T => U, None: () => U|}): U {
     return m.None();
   }
 }
+
+export const None = Object.freeze(new Nothing());
