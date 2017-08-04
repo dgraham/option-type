@@ -19,17 +19,6 @@ describe('option', function() {
     });
   });
 
-  it('can be some or none', function() {
-    let option: Option<number> = None;
-    assert(option.isNone());
-
-    option = Some(42);
-    assert(option.isSome());
-
-    const value: number = option.unwrap();
-    assert.equal(value, 42);
-  });
-
   describe('expect', function() {
     it('unwraps some value', function() {
       const option = Some(42);
@@ -49,6 +38,17 @@ describe('option', function() {
 
     it('throws unwrapping none', function() {
       assert.throws(() => None.unwrap());
+    });
+
+    it('type checks as some or none', function() {
+      let option: Option<number> = None;
+      assert(option.isNone());
+
+      option = Some(42);
+      assert(option.isSome());
+
+      const value: number = option.unwrap();
+      assert.equal(value, 42);
     });
   });
 
