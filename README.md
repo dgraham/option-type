@@ -1,6 +1,6 @@
 # Option type
 
-An [Option] type for [Flow], inspired by [Rust].
+An [Option][] type for [Flow][], inspired by [Rust][].
 
 [Option]: https://en.wikipedia.org/wiki/Option_type
 [Flow]: https://flow.org
