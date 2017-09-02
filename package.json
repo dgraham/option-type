@@ -1,6 +1,6 @@
 {
   "name": "option-type",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "An Option type for Flow, inspired by Rust.",
   "repository": "dgraham/option-type",
   "main": "dist/index.js",
