@@ -150,16 +150,41 @@ describe('option', function() {
       const sq = (x: number): Option<number> => Some(x * x);
       const nope = (_: number): Option<number> => None;
 
-      assert.equal(Some(2).andThen(sq).andThen(sq).unwrap(), 16);
-      assert(Some(2).andThen(sq).andThen(nope).isNone());
-      assert(Some(2).andThen(nope).andThen(sq).isNone());
-      assert(None.andThen(sq).andThen(sq).isNone());
+      assert.equal(
+        Some(2)
+          .andThen(sq)
+          .andThen(sq)
+          .unwrap(),
+        16
+      );
+      assert(
+        Some(2)
+          .andThen(sq)
+          .andThen(nope)
+          .isNone()
+      );
+      assert(
+        Some(2)
+          .andThen(nope)
+          .andThen(sq)
+          .isNone()
+      );
+      assert(
+        None.andThen(sq)
+          .andThen(sq)
+          .isNone()
+      );
     });
   });
 
   describe('or', function() {
     it('returns the some over none', function() {
-      assert.equal(Some(2).or(None).unwrap(), 2);
+      assert.equal(
+        Some(2)
+          .or(None)
+          .unwrap(),
+        2
+      );
     });
 
     it('returns the alternative to none', function() {
@@ -167,7 +192,12 @@ describe('option', function() {
     });
 
     it('returns the first of two somes', function() {
-      assert.equal(Some(2).or(Some(100)).unwrap(), 2);
+      assert.equal(
+        Some(2)
+          .or(Some(100))
+          .unwrap(),
+        2
+      );
     });
 
     it('returns none for two nones', function() {
@@ -180,7 +210,12 @@ describe('option', function() {
     const nope = () => None;
 
     it('returns the some', function() {
-      assert.equal(Some(2).orElse(def).unwrap(), 2);
+      assert.equal(
+        Some(2)
+          .orElse(def)
+          .unwrap(),
+        2
+      );
     });
 
     it('returns the default some value', function() {
