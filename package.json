@@ -3,15 +3,18 @@
   "version": "0.1.2",
   "description": "An Option type for Flow, inspired by Rust.",
   "repository": "dgraham/option-type",
-  "main": "dist/index.js",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.esm.js",
   "scripts": {
     "clean": "rm -rf dist",
     "flow": "flow check",
     "lint": "eslint *.js test/",
-    "prebuild": "npm run clean && npm run flow && npm run lint",
-    "build": "babel index.js -d dist/ && cp index.js dist/index.js.flow",
+    "prebuild": "npm run clean && npm run flow && npm run lint && mkdir dist",
+    "build-umd": "BABEL_ENV=umd babel index.js -o dist/index.umd.js && cp index.js dist/index.umd.js.flow",
+    "build-esm": "BABEL_ENV=esm babel index.js -o dist/index.esm.js && cp index.js dist/index.esm.js.flow",
+    "build": "npm run build-umd && npm run build-esm",
     "pretest": "npm run flow && npm run lint",
-    "test": "mocha --require babel-register",
+    "test": "BABEL_ENV=umd mocha --require babel-register",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
