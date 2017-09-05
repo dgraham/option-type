@@ -39,7 +39,6 @@
     "prettier": "^1.6.1"
   },
   "files": [
-    "index.js",
     "dist"
   ]
 }
