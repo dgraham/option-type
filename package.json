@@ -22,7 +22,8 @@
     "option",
     "some",
     "none",
-    "maybe"
+    "maybe",
+    "result"
   ],
   "author": "David Graham",
   "license": "MIT",

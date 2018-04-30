@@ -2,9 +2,9 @@
 
 import assert from 'assert';
 import {describe, it} from 'mocha';
-import {type Option, option, None, Some} from '../index';
+import {type Result, Ok, Err, type Option, option, None, Some} from '../index';
 
-describe('option', function() {
+describe('Option<T>', function() {
   describe('option factory', function() {
     it('returns none for null', function() {
       assert(option(null).isNone());
@@ -254,6 +254,312 @@ describe('option', function() {
         },
         None() {
           assert.ok(false, 'should not match none');
+        }
+      });
+    });
+  });
+});
+
+describe('Result<T, E>', function() {
+  describe('expect', function() {
+    it('unwraps ok value', function() {
+      const result = Ok(42);
+      assert.equal(result.expect('boom'), 42);
+    });
+
+    it('throws unwrapping err', function() {
+      assert.throws(() => Err(42).expect('boom'));
+    });
+  });
+
+  describe('unwrap', function() {
+    it('unwraps ok value', function() {
+      const result = Ok(42);
+      assert.equal(result.unwrap(), 42);
+    });
+
+    it('throws unwrapping err', function() {
+      assert.throws(() => Err('boom').unwrap());
+    });
+
+    it('type checks as some or none', function() {
+      let result: Result<number, string> = Err('boom');
+      assert(result.isErr());
+
+      result = Ok(42);
+      assert(result.isOk());
+
+      const value: number = result.unwrap();
+      assert.equal(value, 42);
+    });
+  });
+
+  describe('unwrapOr', function() {
+    it('returns the value for ok', function() {
+      const result = Ok(42);
+      assert.equal(result.unwrapOr(12), 42);
+    });
+
+    it('returns the default for err', function() {
+      const result = Err('boom');
+      assert.equal(result.unwrapOr(12), 12);
+    });
+  });
+
+  describe('unwrapOrElse', function() {
+    it('returns the value for ok', function() {
+      const result = Ok(42);
+      assert.equal(result.unwrapOrElse(() => 12), 42);
+    });
+
+    it('invokes the default function for err', function() {
+      const result = Err('boom');
+      assert.equal(result.unwrapOrElse(() => 12), 12);
+    });
+  });
+
+  describe('unwrapErr', function() {
+    it('unwraps err value', function() {
+      const result = Err('boom');
+      assert.equal(result.unwrapErr(), 'boom');
+    });
+
+    it('throws unwrapping ok', function() {
+      assert.throws(() => Ok(42).unwrapErr());
+    });
+  });
+
+  describe('expectErr', function() {
+    it('unwraps err value', function() {
+      const result = Err(42);
+      assert.equal(result.expectErr('boom'), 42);
+    });
+
+    it('throws unwrapping ok', function() {
+      assert.throws(() => Ok(42).expectErr('boom'));
+    });
+  });
+
+  describe('ok', function() {
+    it('returns some for ok value', function() {
+      const result = Ok(42);
+      assert.equal(result.ok().unwrap(), 42);
+    });
+
+    it('returns none for err value', function() {
+      const result = Err('boom');
+      assert(result.ok().isNone());
+    });
+  });
+
+  describe('err', function() {
+    it('returns none for ok value', function() {
+      const result = Ok(42);
+      assert(result.err().isNone());
+    });
+
+    it('returns some for err value', function() {
+      const result = Err('boom');
+      assert.equal(result.err().unwrap(), 'boom');
+    });
+  });
+
+  describe('map', function() {
+    it('returns the mapped value for ok', function() {
+      const result = Ok(42);
+      const actual = result.map(x => `x is ${x}`);
+      assert.equal(actual.unwrap(), 'x is 42');
+    });
+
+    it('returns err for err', function() {
+      const result = Err('boom');
+      const actual = result.map(x => `x is ${x}`);
+      assert(actual.isErr());
+    });
+  });
+
+  describe('mapErr', function() {
+    it('returns the mapped value for err', function() {
+      const result = Err(42);
+      const actual = result.mapErr(x => `x is ${x}`);
+      assert.equal(actual.unwrapErr(), 'x is 42');
+    });
+
+    it('returns ok for ok', function() {
+      const result = Ok(42);
+      const actual = result.mapErr(x => `x is ${x}`);
+      assert(actual.isOk());
+      assert.equal(actual.unwrap(), 42);
+    });
+  });
+
+  describe('and', function() {
+    it('returns err for ok and err', function() {
+      const x = Ok(2);
+      const y: Result<number, string> = Err('boom');
+      assert(x.and(y).isErr());
+    });
+
+    it('returns err for err and ok', function() {
+      const x: Result<number, string> = Err('boom');
+      const y: Result<number, string> = Ok(42);
+      assert(x.and(y).isErr());
+    });
+
+    it('returns ok for ok and ok', function() {
+      const x: Result<number, string> = Ok(2);
+      const y: Result<string, string> = Ok('foo');
+      assert.equal(x.and(y).unwrap(), 'foo');
+    });
+
+    it('returns err for err and err', function() {
+      const x: Result<string, string> = Err('one');
+      const y: Result<number, string> = Err('two');
+      assert(x.and(y).isErr());
+      assert.equal(x.and(y).unwrapErr(), 'one');
+    });
+  });
+
+  describe('andThen', function() {
+    it('flat maps ok and err', function() {
+      const sq = (x: number): Result<number, string> => Ok(x * x);
+      const nope = (_: number): Result<number, string> => Err('boom');
+
+      assert.equal(
+        Ok(2)
+          .andThen(sq)
+          .andThen(sq)
+          .unwrap(),
+        16
+      );
+      assert(
+        Ok(2)
+          .andThen(sq)
+          .andThen(nope)
+          .isErr()
+      );
+      assert(
+        Ok(2)
+          .andThen(nope)
+          .andThen(sq)
+          .isErr()
+      );
+      assert(
+        Err('boom')
+          .andThen(sq)
+          .andThen(sq)
+          .isErr()
+      );
+    });
+  });
+
+  describe('or', function() {
+    it('returns the ok over err', function() {
+      assert.equal(
+        Ok(2)
+          .or(Err('boom'))
+          .unwrap(),
+        2
+      );
+    });
+
+    it('returns the alternative to err', function() {
+      assert.equal(
+        Err('boom')
+          .or(Ok(2))
+          .unwrap(),
+        2
+      );
+    });
+
+    it('returns the first of two ok values', function() {
+      assert.equal(
+        Ok(2)
+          .or(Ok(100))
+          .unwrap(),
+        2
+      );
+    });
+
+    it('returns err for two err values', function() {
+      assert(
+        Err('one')
+          .or(Err('two'))
+          .isErr()
+      );
+      assert.equal(
+        Err('one')
+          .or(Err('two'))
+          .unwrapErr(),
+        'two'
+      );
+    });
+  });
+
+  describe('orElse', function() {
+    const def = () => Ok(42);
+    const nope = () => Err('boom');
+
+    it('returns the ok', function() {
+      assert.equal(
+        Ok(2)
+          .orElse(def)
+          .unwrap(),
+        2
+      );
+    });
+
+    it('returns the default ok value', function() {
+      assert.equal(
+        Err('boom')
+          .orElse(def)
+          .unwrap(),
+        42
+      );
+    });
+
+    it('returns the default err value', function() {
+      assert(
+        Err('one')
+          .orElse(nope)
+          .isErr()
+      );
+      assert.equal(
+        Err('one')
+          .orElse(nope)
+          .unwrapErr(),
+        'boom'
+      );
+    });
+  });
+
+  describe('match', function() {
+    it('matches ok', function() {
+      const x = Ok(2);
+      const value = x.match({
+        Ok: v => v * 2,
+        Err: v => v - 1
+      });
+      assert.equal(value, 4);
+    });
+
+    it('matches err', function() {
+      const x = Err(42);
+      const value = x.match({
+        Ok: v => v * 2,
+        Err: v => v + 1
+      });
+      assert.equal(value, 43);
+    });
+
+    it('allows no return value in matchers', function() {
+      const x = Ok(2);
+      x.match({
+        Ok(value) {
+          assert.equal(value, 2);
+        },
+        Err() {
+          assert.ok(false, 'should not match err');
         }
       });
     });

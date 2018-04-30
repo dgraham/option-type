@@ -27,6 +27,33 @@ const message = result.match({
 console.log(message);
 ```
 
+## Result
+
+A [`Result`][result] type is also included in this package because it's so
+closely related to `Option`.
+
+```js
+
+import {type Result, Ok, Err} from 'option-type';
+
+function parse(json: string): Result<Object, Error> {
+  try {
+    return Ok(JSON.parse(json));
+  } catch (e) {
+    return Err(e);
+  }
+}
+
+const result = parse('{"name": "hubot"}');
+const message = result.match({
+  Ok: x => `Result: ${x.name}`,
+  Err: e => `Failed to parse JSON text: ${e}`
+});
+console.log(message);
+```
+
+[result]: https://doc.rust-lang.org/std/result/enum.Result.html
+
 ## Development
 
 ```
