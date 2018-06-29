@@ -2,7 +2,16 @@
 
 import assert from 'assert';
 import {describe, it} from 'mocha';
-import {type Result, Ok, Err, type Option, option, None, Some} from '../index';
+import {
+  type Result,
+  asyncResult,
+  Ok,
+  Err,
+  type Option,
+  option,
+  None,
+  Some
+} from '../index';
 
 describe('Option<T>', function() {
   describe('option factory', function() {
@@ -261,6 +270,20 @@ describe('Option<T>', function() {
 });
 
 describe('Result<T, E>', function() {
+  describe('asyncResult', function() {
+    it('returns ok for resolved promise', async function() {
+      const result = await asyncResult(Promise.resolve(42));
+      assert(result.isOk());
+      assert.equal(result.unwrap(), 42);
+    });
+
+    it('returns err for rejected promise', async function() {
+      const result = await asyncResult(Promise.reject('boom'));
+      assert(result.isErr());
+      assert.equal(result.unwrapErr(), 'boom');
+    });
+  });
+
   describe('expect', function() {
     it('unwraps ok value', function() {
       const result = Ok(42);

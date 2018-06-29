@@ -298,3 +298,9 @@ export function Ok<T: Value>(value: T): Okay<T> {
 export function Err<E: Value>(value: E): Failure<E> {
   return Object.freeze(new Failure(value));
 }
+
+export function asyncResult<T: Value>(
+  value: Promise<T>
+): Promise<Result<T, Error>> {
+  return value.then(v => Ok(v), e => Err(e));
+}
