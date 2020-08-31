@@ -302,5 +302,8 @@ export function Err<E: Value>(value: E): Failure<E> {
 export function asyncResult<T: Value>(
   value: Promise<T>
 ): Promise<Result<T, Error>> {
-  return value.then(v => Ok(v), e => Err(e));
+  return value.then(
+    v => Ok(v),
+    e => Err(e)
+  );
 }
